@@ -1,0 +1,127 @@
+* Diplomatrix
+
+  Diplomatrix is a [[https://matrix.org/][matrix]] bot written in Python that acts as a game
+  master for [[https://en.wikipedia.org/wiki/Diplomacy_(game)][diplomacy]] games. It relies on the [[https://github.com/diplomacy/diplomacy][diplomacy]] library for
+  its game engine and rendering functionality, and uses the [[complex game with many rules and corner cases to take into account, and, thus, an interesting subject for both entertainment (between humans) and][matrix-nio]]
+  library as a client to matrix.
+
+  This is a work in progress.
+
+** Using the bot
+
+   The diplomatrix bots work with 2 types of rooms:
+
+     1. The main room is where all players congregate and where they
+        can command the bot to start a game, draw the powers, change
+        phases, or more generally, take actions that affect all
+        players (further named /public/ commands).
+     2. The auxiliary rooms allow players to share their orders with
+        the bot more privately.
+
+     In both types of rooms, player can ask the diplomatrix bot for
+     the game status and map, consult or change their own orders,
+     etc. Thus, no action is inherently "private", there are only
+     /regular/ and /public/ commands.
+
+     At most one game is associated to any room at any given moment,
+     and it is called the /topic/ of the room. A running game is
+     always its main room's topic and the main room is the one where
+     the game is started (starting a game thus sets the topic to that
+     new game). When a diplomatrix bot is invited to a room by a
+     matrix user, the topic is set to that user's most recent game, if
+     there is one. If a command (other that ~start-game~) is issued in
+     a room without a topic, the topic is set to the most recent game
+     of the user who issued the command. Every game has a unique
+     identifier that can be used by one of its players to set it as
+     the current topic.
+
+*** Starting a new game
+
+**** ~!start-game~ (public)
+
+     Starts a new game (if not in a main room already). Also sets the
+     topic of the room to that game.
+
+     Optionally, player/power associations can be given, one per
+     line. If the powers are omitted and there are exactly 7 players,
+     the associations are randomly drawn. If both players and powers
+     are omitted and there are exactly 7 channel members (other than
+     the bot), they are all are taken to be players and the powers are
+     drawn.
+
+*** Power exchanges
+
+**** ~!exchange~ (public)
+
+     Offer to exchange your power to another player. Usually done at
+     the begining of the game, but we do not enforce this
+     restriction. TODO. Also see ~!nvm~.
+
+*** Changing the topic
+
+**** ~!set-topic~ (regular)
+
+     TODO
+
+**** ~!unset-topic~ (regular)
+
+     TODO
+
+*** Checking and changing orders
+
+**** ~!orders~ (regular)
+
+     List the player's current orders. TODO
+
+**** ~!do~ (regular)
+ 
+     Add/Set orders. TODO
+
+*** Moving on/changing phases
+
+**** ~!moveon~ ?
+
+     TODO
+
+*** Ending a game
+
+    The game ends when there is a winner. Alternatively, players with
+    remaining units can choose to draw.
+
+**** ~!draw~
+
+     Offer to draw. TODO, also see ~!nvm~.
+
+*** Other
+
+**** ~!nvm~ (public)
+
+     A player can retract outstanding offers by writing ~!nvm~ in the
+     chat. TODO
+
+** Running the bot
+
+   TODO
+
+** Development setup
+
+   The dependencies are listed in ~requirements.txt~, and can be
+   installed with ~pip~. It is recommended to do so in a virtual
+   environment:
+
+   #+BEGIN_SRC shell
+   python3 -m venv .venv # Create a virtual environment with venv
+   source .venv/bin/activate # Activate it (alternatively, use direnv)
+   pip install -r requirements.txt # Install the dependencies
+   #+END_SRC
+
+   Other libraries are useful for formatting/linting/etc. :
+
+   #+BEGIN_SRC shell
+   pip install black isort flake8 mypy
+   #+END_SRC
+
+** TODOs
+
+   - Add examples for each command.
+   - Saving games/restoring games?
